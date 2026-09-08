@@ -17,6 +17,7 @@
     "cn": "^0.2.5",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
+    "framer-motion": "^13.2.0",
     "lucide-react": "^1.41.0",
     "middleware": "^1.0.0",
     "react": "^19.2.8",

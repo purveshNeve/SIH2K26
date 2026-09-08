@@ -1,20 +1,22 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router-dom';
 import App from './App';
-import LoginPage from './app/login';
 import { AuthProvider } from './context/AuthProvider';
 import { useAuth } from './context/authContext';
-import Dashboard from './pages/Dashboard';
-import Predictions from './pages/Predictions';
-import Risk from './pages/Risk';
-import Alerts from './pages/Alerts';
-import Benchmarking from './pages/Benchmarking';
-import CUF from './pages/CUF';
-import Explorer from './pages/Explorer';
 import NotFound from './pages/NotFound';
-import 'tailwindcss';
 import './index.css';
+
+const LoginPage = React.lazy(() => import('./app/login'));
+const Dashboard = React.lazy(() => import('./pages/Dashboard'));
+const Projects = React.lazy(() => import('./pages/Projects'));
+const ProjectDetails = React.lazy(() => import('./pages/ProjectDetails'));
+const Analytics = React.lazy(() => import('./pages/Analytics'));
+const ModelIntelligence = React.lazy(() => import('./pages/ModelIntelligence'));
+
+function RouteLoading() {
+  return <div className="route-loading" role="status" aria-live="polite"><div className="loading-orbit" /><span>Loading workspace...</span></div>;
+}
 
 export function ProtectedLayout() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -37,12 +39,16 @@ const router = createBrowserRouter([
       children: [
         { index: true, element: <Navigate to="/dashboard" replace /> },
         { path: 'dashboard', element: <Dashboard /> },
-        { path: 'predictions', element: <Predictions /> },
-        { path: 'risk', element: <Risk /> },
-        { path: 'alerts', element: <Alerts /> },
-        { path: 'benchmarking', element: <Benchmarking /> },
-        { path: 'cuf', element: <CUF /> },
-        { path: 'explorer', element: <Explorer /> },
+        { path: 'projects', element: <Projects /> },
+        { path: 'projects/:projectId', element: <ProjectDetails /> },
+        { path: 'analytics', element: <Analytics /> },
+        { path: 'model-intelligence', element: <ModelIntelligence /> },
+        { path: 'predictions', element: <Navigate to="/model-intelligence" replace /> },
+        { path: 'risk', element: <Navigate to="/analytics" replace /> },
+        { path: 'alerts', element: <Navigate to="/projects?view=alerts" replace /> },
+        { path: 'benchmarking', element: <Navigate to="/analytics" replace /> },
+        { path: 'cuf', element: <Navigate to="/model-intelligence#drivers" replace /> },
+        { path: 'explorer', element: <Navigate to="/projects" replace /> },
       ],
     }],
   },
@@ -52,7 +58,9 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <AuthProvider>
-      <RouterProvider router={router} />
+      <Suspense fallback={<RouteLoading />}>
+        <RouterProvider router={router} />
+      </Suspense>
     </AuthProvider>
   </React.StrictMode>,
 );

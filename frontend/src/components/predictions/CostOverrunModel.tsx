@@ -130,7 +130,7 @@ export const CostOverrunModel: React.FC<CostOverrunModelProps> = ({
                 <tr style={{ borderBottom: '2px solid var(--border-medium)', color: 'var(--text-tertiary)' }}>
                   <th style={{ padding: '12px 14px', fontWeight: 700 }}>Evaluation Metric / Dimension</th>
                   <th style={{ padding: '12px 14px', fontWeight: 700 }}>Conventional Statistical (ARIMA/OLS)</th>
-                  <th style={{ padding: '12px 14px', fontWeight: 700 }}>PAIMANA AI / ML Ensemble</th>
+                  <th style={{ padding: '12px 14px', fontWeight: 700 }}>PRAGYA ML Ensemble</th>
                   <th style={{ padding: '12px 14px', fontWeight: 700 }}>Measured AI Performance Gain</th>
                 </tr>
               </thead>
@@ -170,7 +170,7 @@ export const CostOverrunModel: React.FC<CostOverrunModelProps> = ({
             color: 'var(--text-secondary)'
           }}>
             <strong style={{ color: 'var(--accent-cyan)' }}>Key Research Finding: </strong>
-            Conventional statistical models rely primarily on historical cumulative expenditure slope and fail to identify non-linear regulatory bottlenecks (e.g. stalled land acquisition or statutory forest delays) until 60-80% of project timeline has already lapsed. The PAIMANA AI multi-modal approach unlocks an <strong style={{ color: 'var(--text-primary)' }}>8.4-month average advance warning window</strong>, giving the Cabinet Secretariat and IPMD actionable lead time to intervene before cost escalation compounds.
+            Conventional statistical models rely primarily on historical cumulative expenditure slope and fail to identify non-linear regulatory bottlenecks (e.g. stalled land acquisition or statutory forest delays) until 60-80% of project timeline has already lapsed. The PRAGYA multi-modal approach unlocks an <strong style={{ color: 'var(--text-primary)' }}>8.4-month average advance warning window</strong>, giving the Cabinet Secretariat and IPMD actionable lead time to intervene before cost escalation compounds.
           </div>
         </div>
       )}

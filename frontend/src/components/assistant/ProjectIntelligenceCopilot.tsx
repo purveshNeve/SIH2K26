@@ -18,8 +18,8 @@ export const ProjectIntelligenceCopilot: React.FC<ProjectIntelligenceCopilotProp
       id: 'm-1',
       sender: 'assistant',
       timestamp: 'Just now',
-      content: `### 🤖 Welcome to PAIMANA Project Intelligence Copilot
-I am your generative decision-support assistant trained on **2 decades of historical OCMS infrastructure data** and live **April 2026 PAIMANA telemetry** (1,981 Central Sector projects valued at ₹42.78 Lakh Crore).
+      content: `### 🤖 Welcome to PRAGYA Project Intelligence Copilot
+    I am your generative decision-support assistant trained on **2 decades of historical OCMS infrastructure data** and live **April 2026 PRAGYA telemetry** (1,981 Central Sector projects valued at ₹42.78 Lakh Crore).
 
 How can I assist you with infrastructure risk diagnosis, ministerial benchmarking, or prescriptive interventions today?`
     }
@@ -32,7 +32,7 @@ How can I assist you with infrastructure risk diagnosis, ministerial benchmarkin
   const promptSuggestions = [
     "Which Railway projects face critical cost overruns?",
     "Explain top 3 escalation drivers for MAHSR Bullet Train",
-    "How does PAIMANA AI outperform conventional statistical methods?",
+    "How does PRAGYA outperform conventional statistical methods?",
     "What interventions are proposed for Char Dham Silkyara tunnel?"
   ];
 
@@ -129,7 +129,7 @@ How can I assist you with infrastructure risk diagnosis, ministerial benchmarkin
           </div>
           <div>
             <h4 style={{ fontSize: '0.92rem', fontWeight: 800, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              PAIMANA Copilot <span className="badge badge-cyan" style={{ fontSize: '0.62rem' }}>LLM Active</span>
+              PRAGYA Copilot <span className="badge badge-cyan" style={{ fontSize: '0.62rem' }}>LLM Active</span>
             </h4>
             <span style={{ fontSize: '0.7rem', color: 'var(--text-tertiary)' }}>
               Executive Infrastructure Intelligence
@@ -174,7 +174,7 @@ How can I assist you with infrastructure risk diagnosis, ministerial benchmarkin
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.68rem', color: 'var(--text-tertiary)' }}>
                 {isUser ? <User size={12} /> : <Bot size={12} color="var(--accent-cyan)" />}
-                <span>{isUser ? 'You (Administrator)' : 'PAIMANA Intelligence'}</span>
+                <span>{isUser ? 'You (Administrator)' : 'PRAGYA Intelligence'}</span>
                 <span>• {msg.timestamp}</span>
               </div>
 

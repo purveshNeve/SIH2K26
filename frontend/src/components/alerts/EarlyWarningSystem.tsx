@@ -44,6 +44,13 @@ export const EarlyWarningSystem: React.FC<EarlyWarningSystemProps> = ({
     return matchesSeverity && matchesSearch;
   });
 
+  const overviewCards = [
+    { label: 'Live signals', value: filteredAlerts.length.toString(), tone: 'cyan' },
+    { label: 'Critical', value: filteredAlerts.filter(a => a.severity === 'CRITICAL').length.toString(), tone: 'rose' },
+    { label: 'High', value: filteredAlerts.filter(a => a.severity === 'HIGH').length.toString(), tone: 'amber' },
+    { label: 'Median lead time', value: `${Math.round(filteredAlerts.reduce((sum, a) => sum + a.detectionLeadTimeMonths, 0) / (filteredAlerts.length || 1))} mo`, tone: 'emerald' }
+  ];
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
       {/* Toast Notification */}
@@ -109,6 +116,26 @@ export const EarlyWarningSystem: React.FC<EarlyWarningSystemProps> = ({
             </button>
           ))}
         </div>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px' }}>
+        {overviewCards.map(card => (
+          <div
+            key={card.label}
+            className="glass-panel"
+            style={{
+              padding: '14px 16px',
+              borderLeft: `3px solid ${
+                card.tone === 'cyan' ? 'var(--accent-cyan)' :
+                card.tone === 'rose' ? 'var(--accent-rose)' :
+                card.tone === 'amber' ? 'var(--accent-amber)' : 'var(--accent-emerald)'
+              }`
+            }}
+          >
+            <div style={{ fontSize: '0.72rem', color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{card.label}</div>
+            <div className="num-mono" style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '4px' }}>{card.value}</div>
+          </div>
+        ))}
       </div>
 
       {/* Filter & Search Bar */}

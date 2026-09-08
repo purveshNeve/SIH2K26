@@ -22,7 +22,7 @@ export const RiskScoringFramework: React.FC<RiskScoringFrameworkProps> = ({
         <div>
           <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <ShieldAlert size={22} color="var(--accent-rose)" />
-            PAIMANA Composite Risk Index (PCRI) Framework
+            PRAGYA Composite Risk Index (PCRI) Framework
           </h2>
           <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
             Multi-dimensional weighted risk scoring engine synthesizing timeline, financial velocity, statutory friction, and contractor health

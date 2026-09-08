@@ -83,7 +83,7 @@ export const projectService = {
       const baseCost = project.predictedFinalCostCr;
       const baseMonths = project.timeOverrunMonths;
 
-      // Sensitivity factors calibrated against historical OCMS/PAIMANA regressions
+      // Sensitivity factors calibrated against historical OCMS/PRAGYA regressions
       // Land acquisition delay: ~₹42 Cr/month escalation + compounding interest during construction
       const landCostImpact = input.landAcquisitionDelayMonths * 48.5;
       // Environmental clearance: ~₹35 Cr/month
@@ -172,7 +172,7 @@ Based on telemetry from the **1,981 monitored Central Sector projects**, the Rai
       if (q.includes('cuf') || q.includes('variable') || q.includes('driver') || q.includes('shap')) {
         return `### 📊 Common Upload Form (CUF) vs. External Variables Attribution
 
-The PAIMANA AI multi-modal model demonstrates that **62% of predictive power** originates from standard CUF fields, while **38%** requires enrichment from external non-CUF variables:
+The PRAGYA multi-modal model demonstrates that **62% of predictive power** originates from standard CUF fields, while **38%** requires enrichment from external non-CUF variables:
 
 - **Top CUF Predictors**:
   1. *Cumulative Expenditure Velocity / Burn Rate* (SHAP Score: 0.23) — Deceleration before 50% milestone strongly signals contractor distress.
@@ -197,11 +197,11 @@ As of **April 2026**, **842 out of 1,981 projects (42.5%)** are experiencing tim
   4. **Roads & Highways**: Avg delay 21.4 months (Fastest recovery cycle due to hybrid annuity concessionaire flexibility).
 
 - **Recommended High-Priority Interventions**:
-  - Mandate **Monthly Critical Path Milestone Verification** in PAIMANA for all projects >₹1,000 Cr.
+  - Mandate **Monthly Critical Path Milestone Verification** in PRAGYA for all projects >₹1,000 Cr.
   - Empower State-Level Coordination Committees (SLCC) under Chief Secretaries with 30-day statutory resolution windows for utility shifting.`;
       }
 
-      return `### 📋 PAIMANA AI Executive Intelligence Synthesis
+      return `### 📋 PRAGYA Executive Intelligence Synthesis
 
 Thank you for your query regarding the **Central Sector Infrastructure Monitoring Portfolio (MoSPI / IPMD)**.
 

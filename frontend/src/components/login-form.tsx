@@ -1,15 +1,19 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { LockKeyhole, Mail, ShieldCheck, Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/authContext';
 
 export function LoginForm() {
   const navigate = useNavigate();
-  const { login, register, isLoading } = useAuth();
+  const { login, register, isAuthenticated, isLoading } = useAuth();
   const [mode, setMode] = useState<'login' | 'register'>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (isAuthenticated) navigate('/dashboard', { replace: true });
+  }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -17,7 +21,6 @@ export function LoginForm() {
     try {
       if (mode === 'register') await register(email, password);
       else await login(email, password);
-      navigate('/dashboard', { replace: true });
     } catch (requestError) {
       const responseError = requestError as { response?: { data?: { detail?: string } } };
       setError(responseError.response?.data?.detail || 'Unable to sign in. Check your credentials and try again.');
@@ -29,9 +32,9 @@ export function LoginForm() {
       <div className="login-card-header">
         <div className="login-seal"><ShieldCheck size={24} /></div>
         <div>
-          <p className="login-eyebrow"><Sparkles size={13} /> SECURE ACCESS</p>
+          <p className="login-eyebrow"><Sparkles size={13} /> Secure Access</p>
           <h1 id="login-title">{mode === 'login' ? 'Welcome back' : 'Create your account'}</h1>
-          <p>{mode === 'login' ? 'Sign in to the PAIMANA AI command center.' : 'Register for the PAIMANA AI command center.'}</p>
+          <p>{mode === 'login' ? 'Sign in to the PRAGYA command center.' : 'Register for the PRAGYA command center.'}</p>
         </div>
       </div>
 
@@ -53,12 +56,12 @@ export function LoginForm() {
 
         {error && <p className="login-error" role="alert">{error}</p>}
         <button className="login-submit" type="submit" disabled={isLoading}>
-          {isLoading ? 'Please wait...' : mode === 'login' ? 'Sign in to PAIMANA' : 'Create PAIMANA account'}
+          {isLoading ? 'Please wait...' : mode === 'login' ? 'Sign in to PRAGYA' : 'Create PRAGYA account'}
         </button>
       </form>
 
       <div className="login-mode-switch">
-        <span>{mode === 'login' ? 'New to PAIMANA?' : 'Already registered?'}</span>
+        <span>{mode === 'login' ? 'New to PRAGYA?' : 'Already registered?'}</span>
         <button type="button" onClick={() => { setMode(mode === 'login' ? 'register' : 'login'); setError(''); }}>
           {mode === 'login' ? 'Sign up' : 'Login'}
         </button>

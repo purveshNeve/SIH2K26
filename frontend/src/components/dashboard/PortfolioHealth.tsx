@@ -24,7 +24,7 @@ export const PortfolioHealth: React.FC = () => {
             Portfolio Health & Risk Distribution
           </h4>
           <p style={{ fontSize: '0.74rem', color: 'var(--text-tertiary)', marginTop: '2px' }}>
-            Risk classification generated across 1,981 projects by PAIMANA early warning algorithms
+            Risk classification generated across 1,981 projects by PRAGYA early warning algorithms
           </p>
         </div>
         <span className="badge badge-cyan" style={{ fontSize: '0.65rem' }}>

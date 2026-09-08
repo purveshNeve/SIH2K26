@@ -151,7 +151,7 @@ export const CUFDriverAnalysis: React.FC = () => {
           Prescriptive Policy Recommendation: Modernizing CUF to "CUF 2.0"
         </h4>
         <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '12px' }}>
-          To capture the <strong>38% unaccounted variance</strong> without requiring line ministries to manually upload bulky external datasets, we propose that the PAIMANA backend automatically ingest:
+          To capture the <strong>38% unaccounted variance</strong> without requiring line ministries to manually upload bulky external datasets, we propose that the PRAGYA backend automatically ingest:
         </p>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '12px', fontSize: '0.75rem' }}>

@@ -41,7 +41,7 @@ export const MOCK_ALERTS: EarlyWarningAlert[] = [
     prescriptiveRecommendations: [
       'Deploy continuous Ground Penetrating Radar (GPR) and fiber-optic deformation sensors in coordination with NGI Norway.',
       'MoRTH to request immediate exemption from MoEFCC Forest Advisory Committee for safety egress portal.',
-      'Mandate weekly geotechnical status telemetry directly into PAIMANA automated sensor feed.'
+      'Mandate weekly geotechnical status telemetry directly into PRAGYA automated sensor feed.'
     ],
     status: 'ACTIVE'
   },

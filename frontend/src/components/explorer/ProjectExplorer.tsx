@@ -16,6 +16,10 @@ export const ProjectExplorer: React.FC<ProjectExplorerProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSector, setSelectedSector] = useState<SectorType | 'ALL'>(initialSectorFilter);
   const [selectedRisk, setSelectedRisk] = useState<RiskLevel | 'ALL'>('ALL');
+  const [selectedMinistry, setSelectedMinistry] = useState('ALL');
+  const [selectedStatus, setSelectedStatus] = useState<Project['status'] | 'ALL'>('ALL');
+  const [maxCost, setMaxCost] = useState('ALL');
+  const [minDelay, setMinDelay] = useState('ALL');
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('table');
   const [sortBy, setSortBy] = useState<'cost' | 'delay' | 'risk' | 'name'>('risk');
 
@@ -30,24 +34,63 @@ export const ProjectExplorer: React.FC<ProjectExplorerProps> = ({
     'Urban Development & Metro',
     'Ports & Shipping'
   ];
+  const ministries = [...new Set(projects.map((project) => project.ministry))];
 
   const filteredProjects = projects.filter(p => {
     const matchesSearch = 
       p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       p.implementingAgency.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.ministry.toLowerCase().includes(searchQuery.toLowerCase()) ||
       p.state.toLowerCase().includes(searchQuery.toLowerCase()) ||
       p.paimanaId.toLowerCase().includes(searchQuery.toLowerCase());
 
     const matchesSector = selectedSector === 'ALL' || p.sector === selectedSector;
     const matchesRisk = selectedRisk === 'ALL' || p.riskLevel === selectedRisk;
+    const matchesMinistry = selectedMinistry === 'ALL' || p.ministry === selectedMinistry;
+    const matchesStatus = selectedStatus === 'ALL' || p.status === selectedStatus;
+    const matchesCost = maxCost === 'ALL' || p.predictedFinalCostCr <= Number(maxCost);
+    const matchesDelay = minDelay === 'ALL' || p.timeOverrunMonths >= Number(minDelay);
 
-    return matchesSearch && matchesSector && matchesRisk;
+    return matchesSearch && matchesSector && matchesRisk && matchesMinistry && matchesStatus && matchesCost && matchesDelay;
   }).sort((a, b) => {
     if (sortBy === 'cost') return b.predictedFinalCostCr - a.predictedFinalCostCr;
     if (sortBy === 'delay') return b.timeOverrunMonths - a.timeOverrunMonths;
     if (sortBy === 'risk') return b.riskBreakdown.compositeScore - a.riskBreakdown.compositeScore;
     return a.name.localeCompare(b.name);
   });
+
+  const summaryCards = [
+    {
+      label: 'Projects in view',
+      value: filteredProjects.length.toString(),
+      tone: 'cyan'
+    },
+    {
+      label: 'High risk exposure',
+      value: `${filteredProjects.filter(p => p.riskLevel === 'CRITICAL' || p.riskLevel === 'HIGH').length}`,
+      tone: 'rose'
+    },
+    {
+      label: 'Avg. delay',
+      value: `${Math.round(filteredProjects.reduce((sum, p) => sum + p.timeOverrunMonths, 0) / (filteredProjects.length || 1))} mo`,
+      tone: 'amber'
+    },
+    {
+      label: 'Forecast cost delta',
+      value: `+${Math.round(filteredProjects.reduce((sum, p) => sum + p.costOverrunPercent, 0) / (filteredProjects.length || 1))}%`,
+      tone: 'emerald'
+    }
+  ];
+
+  const clearFilters = () => {
+    setSearchQuery('');
+    setSelectedSector('ALL');
+    setSelectedRisk('ALL');
+    setSelectedMinistry('ALL');
+    setSelectedStatus('ALL');
+    setMaxCost('ALL');
+    setMinDelay('ALL');
+  };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
@@ -112,6 +155,26 @@ export const ProjectExplorer: React.FC<ProjectExplorerProps> = ({
         </div>
       </div>
 
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px' }}>
+        {summaryCards.map(card => (
+          <div
+            key={card.label}
+            className="glass-panel"
+            style={{
+              padding: '14px 16px',
+              borderLeft: `3px solid ${
+                card.tone === 'cyan' ? 'var(--accent-cyan)' :
+                card.tone === 'rose' ? 'var(--accent-rose)' :
+                card.tone === 'amber' ? 'var(--accent-amber)' : 'var(--accent-emerald)'
+              }`
+            }}
+          >
+            <div style={{ fontSize: '0.72rem', color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{card.label}</div>
+            <div className="num-mono" style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '4px' }}>{card.value}</div>
+          </div>
+        ))}
+      </div>
+
       {/* Filter Toolbar */}
       <div className="glass-panel" style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
         <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', alignItems: 'center' }}>
@@ -120,7 +183,7 @@ export const ProjectExplorer: React.FC<ProjectExplorerProps> = ({
             <Search size={16} color="var(--text-tertiary)" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
             <input
               type="text"
-              placeholder="Search projects by title, agency, state, or PAIMANA ID..."
+              placeholder="Search by project, ministry, sector, state, or project ID..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               style={{
@@ -134,6 +197,35 @@ export const ProjectExplorer: React.FC<ProjectExplorerProps> = ({
                 outline: 'none'
               }}
             />
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', fontWeight: 600 }}>Ministry:</span>
+            <select value={selectedMinistry} onChange={(e) => setSelectedMinistry(e.target.value)} style={{ background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-sm)', padding: '6px 10px', fontSize: '0.78rem', outline: 'none', maxWidth: '190px' }}>
+              <option value="ALL">All ministries</option>
+              {ministries.map((ministry) => <option key={ministry} value={ministry}>{ministry}</option>)}
+            </select>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', fontWeight: 600 }}>Status:</span>
+            <select value={selectedStatus} onChange={(e) => setSelectedStatus(e.target.value as Project['status'] | 'ALL')} style={{ background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-sm)', padding: '6px 10px', fontSize: '0.78rem', outline: 'none' }}>
+              <option value="ALL">All statuses</option><option value="ON_TRACK">On track</option><option value="AT_RISK">At risk</option><option value="CRITICAL_DELAY">Critical delay</option><option value="COMPLETED">Completed</option>
+            </select>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', fontWeight: 600 }}>Cost:</span>
+            <select value={maxCost} onChange={(e) => setMaxCost(e.target.value)} style={{ background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-sm)', padding: '6px 10px', fontSize: '0.78rem', outline: 'none' }}>
+              <option value="ALL">Any forecast</option><option value="10000">Under Rs 10k Cr</option><option value="50000">Under Rs 50k Cr</option><option value="100000">Under Rs 1L Cr</option>
+            </select>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', fontWeight: 600 }}>Delay:</span>
+            <select value={minDelay} onChange={(e) => setMinDelay(e.target.value)} style={{ background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-sm)', padding: '6px 10px', fontSize: '0.78rem', outline: 'none' }}>
+              <option value="ALL">Any delay</option><option value="12">12+ months</option><option value="24">24+ months</option><option value="60">60+ months</option>
+            </select>
           </div>
 
           {/* Risk Level Filter */}
@@ -208,11 +300,21 @@ export const ProjectExplorer: React.FC<ProjectExplorerProps> = ({
               </button>
             );
           })}
+          <button onClick={clearFilters} style={{ padding: '4px 12px', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-full)', background: 'transparent', color: 'var(--accent-cyan)', fontWeight: 700, fontSize: '0.74rem', cursor: 'pointer', whiteSpace: 'nowrap' }}>Clear filters</button>
         </div>
       </div>
 
+      {filteredProjects.length === 0 && (
+        <section className="state-panel glass-panel">
+          <Search size={24} color="var(--accent-cyan)" />
+          <h3>No projects match these filters</h3>
+          <p>Try a broader search or clear the filters to see the full portfolio.</p>
+          <button className="primary-action" onClick={clearFilters}>Clear filters</button>
+        </section>
+      )}
+
       {/* Mode 1: Table View */}
-      {viewMode === 'table' && (
+      {viewMode === 'table' && filteredProjects.length > 0 && (
         <div className="glass-panel" style={{ padding: '16px' }}>
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem', textAlign: 'left' }}>
@@ -286,7 +388,7 @@ export const ProjectExplorer: React.FC<ProjectExplorerProps> = ({
       )}
 
       {/* Mode 2: Card Grid View */}
-      {viewMode === 'grid' && (
+      {viewMode === 'grid' && filteredProjects.length > 0 && (
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fill, minmax(310px, 1fr))',

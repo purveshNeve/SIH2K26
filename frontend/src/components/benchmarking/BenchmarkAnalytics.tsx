@@ -60,6 +60,31 @@ export const BenchmarkAnalytics: React.FC = () => {
         </div>
       </div>
 
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px' }}>
+        {[
+          { label: 'Portfolio value', value: '₹42.78L Cr', tone: 'cyan' },
+          { label: 'Avg. cost variance', value: '+18.4%', tone: 'rose' },
+          { label: 'Avg. delay', value: '14.7 mo', tone: 'amber' },
+          { label: 'Top efficiency', value: 'A+', tone: 'emerald' }
+        ].map(card => (
+          <div
+            key={card.label}
+            className="glass-panel"
+            style={{
+              padding: '14px 16px',
+              borderLeft: `3px solid ${
+                card.tone === 'cyan' ? 'var(--accent-cyan)' :
+                card.tone === 'rose' ? 'var(--accent-rose)' :
+                card.tone === 'amber' ? 'var(--accent-amber)' : 'var(--accent-emerald)'
+              }`
+            }}
+          >
+            <div style={{ fontSize: '0.72rem', color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{card.label}</div>
+            <div className="num-mono" style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '4px' }}>{card.value}</div>
+          </div>
+        ))}
+      </div>
+
       {/* Mode 1: Ministries Benchmark */}
       {activeSubTab === 'ministries' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>

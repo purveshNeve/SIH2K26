@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import type { LucideIcon } from 'lucide-react';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 
@@ -33,6 +33,28 @@ export const StatCard: React.FC<StatCardProps> = ({
   };
 
   const themeColors = colorMap[color];
+  const [displayValue, setDisplayValue] = useState<string>(String(value));
+
+  useEffect(() => {
+    if (typeof value !== 'number') return;
+
+    let frameId = 0;
+    const start = 0;
+    const end = value;
+    const duration = 900;
+    const startTime = performance.now();
+
+    const tick = (now: number) => {
+      const progress = Math.min((now - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const nextValue = Math.round(start + (end - start) * eased);
+      setDisplayValue(nextValue.toLocaleString('en-IN'));
+      if (progress < 1) frameId = requestAnimationFrame(tick);
+    };
+
+    frameId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frameId);
+  }, [value]);
 
   return (
     <div 
@@ -44,8 +66,8 @@ export const StatCard: React.FC<StatCardProps> = ({
       }}
       title={tooltip}
     >
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '12px' }}>
-        <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '14px' }}>
+        <span style={{ fontSize: '0.76rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
           {title}
         </span>
         <div style={{
@@ -57,21 +79,27 @@ export const StatCard: React.FC<StatCardProps> = ({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          color: themeColors.text
+          color: themeColors.text,
+          boxShadow: '0 8px 18px rgba(15, 23, 42, 0.05)'
         }}>
           <Icon size={18} />
         </div>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '4px' }}>
-        <div className="num-mono" style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.1 }}>
-          {value}
+      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '8px', marginBottom: '8px' }}>
+        <div className="num-mono" style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.1 }}>
+          {typeof value === 'number' ? displayValue : String(value)}
+        </div>
+        <div style={{ width: '48px', height: '24px', borderRadius: '8px', background: 'linear-gradient(180deg, rgba(255,255,255,0.8), rgba(148,163,184,0.05))', border: '1px solid rgba(148,163,184,0.16)', display: 'flex', alignItems: 'end', justifyContent: 'space-between', padding: '4px 5px' }}>
+          {[25, 38, 30, 50, 58, 45].map((bar, index) => (
+            <span key={index} style={{ width: '4px', height: `${bar}%`, borderRadius: '3px 3px 0 0', background: index % 2 === 0 ? themeColors.text : 'rgba(148,163,184,0.7)' }} />
+          ))}
         </div>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '6px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
         {subtitle && (
-          <span style={{ fontSize: '0.74rem', color: 'var(--text-tertiary)' }}>
+          <span style={{ fontSize: '0.74rem', color: 'var(--text-tertiary)', lineHeight: 1.4 }}>
             {subtitle}
           </span>
         )}
@@ -83,13 +111,13 @@ export const StatCard: React.FC<StatCardProps> = ({
             gap: '3px',
             fontSize: '0.72rem',
             fontWeight: 700,
-            padding: '2px 7px',
+            padding: '3px 7px',
             borderRadius: 'var(--radius-full)',
             background: deltaType === 'positive' 
-              ? 'rgba(16, 185, 129, 0.15)' 
+              ? 'rgba(16, 185, 129, 0.12)' 
               : deltaType === 'negative' 
-                ? 'rgba(239, 68, 68, 0.15)' 
-                : 'rgba(255, 255, 255, 0.08)',
+                ? 'rgba(239, 68, 68, 0.12)' 
+                : 'rgba(148, 163, 184, 0.12)',
             color: deltaType === 'positive' 
               ? 'var(--accent-emerald)' 
               : deltaType === 'negative' 
